@@ -101,7 +101,7 @@ input{font-family:var(--font)}
 /* ═══════════════════════════════════════════════════
    JUEGO
 ═══════════════════════════════════════════════════ */
-.gwrap{padding:7px 7px 9px;gap:5px;justify-content:flex-start}
+.gwrap{padding:7px 7px 90px;gap:5px;justify-content:flex-start}
 .hud{display:flex;width:100%;align-items:center;justify-content:space-between;padding:5px 3px;border-bottom:1px dashed var(--dash)}
 .hcol{display:flex;flex-direction:column;align-items:center}
 .hlbl{font-size:6px;color:var(--gold);letter-spacing:1px;margin-bottom:2px}
@@ -119,9 +119,9 @@ input{font-family:var(--font)}
 .lseg{height:9px;border-radius:2px;transition:background .2s}
 .lfill{background:var(--green);box-shadow:0 0 4px rgba(118,255,3,.5)}
 .lempty{background:#1E2030}
-.gctrl{width:100%;display:flex;flex-direction:column;align-items:center;gap:5px;padding:3px 0}
+.gctrl{width:100%;display:flex;flex-direction:column;align-items:center;gap:5px;padding:3px 0;position:relative;z-index:1000;}
 .crow{display:flex;gap:9px;justify-content:center}
-.cbtn{width:50px;height:50px;background:var(--card);border:2px solid var(--border2);border-radius:9px;color:var(--white);font-size:19px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 #0A0B10;transition:transform .07s,box-shadow .07s}
+.cbtn{width:50px;height:50px;background:var(--card);border:2px solid var(--border2);border-radius:9px;color:var(--white);font-size:19px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 #0A0B10;transition:transform .07s,box-shadow .07s;position:relative;z-index:1001;touch-action:manipulation;}
 .cbtn:active{transform:translateY(3px);box-shadow:0 1px 0 #0A0B10}
 .rotbtn{border-color:var(--purple);color:var(--purpleL)}
 
@@ -279,11 +279,14 @@ input{font-family:var(--font)}
 }
 .bottom-ad,
 .bottom-ad-gameover{
-    position:absolute;
-    bottom:0;
+    position:fixed;
     left:0;
+    bottom:0;
     width:100%;
     display:flex;
     justify-content:center;
-    padding-bottom:5px;
+    align-items:center;
+    z-index:10;
+    background:transparent;
+    pointer-events:auto;
 }
