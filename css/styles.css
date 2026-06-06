@@ -204,7 +204,7 @@ input{font-family:var(--font)}
 .gstatus{font-size:6px;white-space:nowrap;flex-shrink:0}
 
 /* Detail overlay */
-.detbox{max-width:330px;max-height:88vh;overflow-y:auto;gap:12px}
+.detbox{max-width:330px;max-height:88vh;overflow-y:auto;gap:12px;line-height:1;}
 .largebox{width:210px;height:210px}
 
 /* ═══════════════════════════════════════════════════
