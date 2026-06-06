@@ -277,7 +277,7 @@ input{font-family:var(--font)}
   line-height:1.8;
   color:var(--white);
 }
-.bottom-ad,
+/* .bottom-ad,
 .bottom-ad-gameover{
     position:fixed;
     left:0;
@@ -292,4 +292,4 @@ input{font-family:var(--font)}
 .bottom-ad ins,
 .bottom-ad-gameover ins{
     pointer-events:auto;
-}
+} */
