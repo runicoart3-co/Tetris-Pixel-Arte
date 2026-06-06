@@ -271,11 +271,11 @@ function stopMusic(){
   musicNodes.forEach(n=>{try{n.stop()}catch(e){}});
   musicNodes=[];
 }
-function vibrate(ms=80){
+function vibrate(pattern=80){
   try{
     if(!G.vibOn) return;
     if(navigator.vibrate){
-      navigator.vibrate(ms);
+      navigator.vibrate(pattern);
     }
   }catch(err){
     console.log(err);
@@ -719,6 +719,7 @@ function pausar(){
   G.paused=true;sfxPause();
   document.getElementById('ov-pause').classList.remove('hid');
   G.saved=true;saveAll();
+  resetControls();
 }
 function reanudar(){
   sfxBtn();G.paused=false;
@@ -731,6 +732,7 @@ function irMenuJuego(){
   cancelAnimationFrame(G._raf);clearInterval(G._timer);
   document.getElementById('ov-pause').classList.add('hid');
   saveAll();irA('s-menu');updateContBtn();
+  resetControls();
 }
 function triggerGO(){
   G.running=false;G.saved=false;
@@ -748,6 +750,7 @@ function triggerGO(){
   document.getElementById('go-thanks-txt').textContent='¡GRACIAS POR JUGAR!';
   if(esR){initBuf=[];renderInits();}
   irA('s-go');
+  resetControls();
 }
 function isRecord(sc){  
   if(G.scores.length<10)return true;
@@ -755,15 +758,17 @@ function isRecord(sc){
 }
 function showLevelUp(){
   vibrate(500,300,500);
-  G.paused=true;cancelAnimationFrame(G._raf);// Al pasar del nivel 0→1 desbloquea obra id=1, del 1→2 desbloquea id=2, etc.
-  clearInterval(G._timer);// G.level ya fue incrementado en lockPiece antes de llamar esta función
-  // nivel 1 → desbloquea obra con id=1 (índice 0 del array)
+ G.paused = true;
+  cancelAnimationFrame(G._raf);
+  clearInterval(G._timer);
+  hstop(); // ← AGREGAR
+}
   const obraIdx = G.level - 1; // level ya fue incrementado antes de llamar esto
   if(obraIdx >= 0 && obraIdx < G.gallery.length){
     G.gallery[obraIdx].unlocked = true;
   }
   const art=G.gallery[obraIdx]||G.gallery[0];
-  sfxLevelUp();sfxArtwork();vibrate(50,50,100);
+  sfxLevelUp();sfxArtwork();vibrate(500,300,500);
 
   document.getElementById('lu-old').textContent=`NIVEL ${pad(G.level-1)}`;
   document.getElementById('lu-new').textContent=`NIVEL ${pad(G.level)}`;
@@ -777,20 +782,25 @@ function showLevelUp(){
   document.getElementById('s-level').classList.add('active');
 }
 function continuarTrasNivel(){
+  hstop();
   sfxBtn();
   G.paused = false;
   G.running = true;// Mostrar pantalla de juego directamente sin irA (para no disparar sfxBtn doble)
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('s-game').classList.add('active');
   updateHUD();     // actualiza el nivel nuevo y la barra vacía
+  spawn();         // genera la siguiente pieza activa
   drawBoard();     // redibuja el tablero tal como estaba
   drawNext();      // muestra la siguiente pieza
-  spawn();         // genera la siguiente pieza activa
   clearInterval(G._timer);
   G._timer = setInterval(timerTick, 1000);
   G._lastDrop = performance.now();
   G._raf = requestAnimationFrame(loop);
   saveAll();       // guarda el estado con el nivel actualizado
+}
+function resetControls(){
+  hstop();
+  G._hold = null;
 }
 function sparks(){
   const el=document.getElementById('sparks');if(!el)return;
