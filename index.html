@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+<link rel="icon" href="icon/icon-192.png">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0d0f14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1274133643788357"
+     crossorigin="anonymous"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1274133643788357"
+     crossorigin="anonymous"></script>
+<title>TETRIS — Galería de Arte</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     MENÚ PRINCIPAL
+═══════════════════════════════════════ -->
+<div id="s-menu" class="screen active">
+<div class="wrap">
+  <div id="title-tetris" class="ptitle big"></div>
+  <div class="menu-sub"><span>✦</span> MENÚ <span>✦</span></div>
+  <div class="mbtns">
+    <button class="mbtn disabled" id="btn-cont" onclick="continuarJuego()"><span class="ico">▶</span>CONTINUAR JUEGO</button>
+    <button class="mbtn" onclick="nuevoJuego()"><span class="ico">⊞</span>NUEVO JUEGO</button>
+    <button class="mbtn" onclick="irA('s-gallery')"><span class="ico">🖼</span>ACCEDER A GALERÍA</button>
+    <button class="mbtn" onclick="irA('s-instr')"><span class="ico">📖</span>INSTRUCCIONES</button>
+    <button class="mbtn" onclick="irA('s-hs')"><span class="ico">🏆</span>MEJORES PUNTUACIONES</button>
+  </div>
+  <div class="settings-block">
+    <div class="srow">
+      <span class="sico">🎵</span>
+      <span class="slbl">MÚSICA</span>
+      <div class="vbar" id="vbar-music"></div>
+      <span class="stog" id="tog-music" onclick="toggleMusic()">ON</span>
+    </div>
+    <div class="srow">
+      <span class="sico">🔊</span>
+      <span class="slbl">SONIDOS</span>
+      <div class="vbar" id="vbar-sfx"></div>
+      <span class="stog" id="tog-sfx" onclick="toggleSfx()">ON</span>
+    </div>
+    <div class="srow">
+      <span class="sico">📳</span>
+      <span class="slbl"><span class="stext">VIBRACIÓN</span></span>
+      <span class="stog" id="tog-vib" onclick="toggleVib()">ON</span>
+    </div>
+  </div>
+  <button class="mbtn red-b" onclick="salir()"><span class="ico">🚪</span>SALIR DEL JUEGO</button>
+</div>
+</div>
+<div class="bottom-ad">
+
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:320px;height:50px"
+     data-ad-client="ca-pub-1274133643788357"
+     data-ad-slot="1967113977"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+
+</div>
+
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<!-- ═══════════════════════════════════════
+     JUEGO
+═══════════════════════════════════════ -->
+<div id="s-game" class="screen">
+<div class="wrap gwrap">
+  <div class="hud">
+    <div class="hcol"><div class="hlbl">TIEMPO</div><div class="hval" id="h-time">00:00</div></div>
+    <div class="hcenter">
+      <button class="hbtn" onclick="pausar()">⏸</button>
+      <button class="hbtn" onclick="irMenuJuego()">☰</button>
+    </div>
+    <div class="hcol"><div class="hlbl">PUNTUACIÓN</div><div class="hval" id="h-score">000000</div></div>
+  </div>
+  <div class="garea">
+    <div class="gside">
+      <div class="slbl2">SIGUIENTE</div>
+      <div class="nbox"><canvas id="cvn" width="56" height="56"></canvas></div>
+    </div>
+    <canvas id="cvb" width="180" height="360"></canvas>
+    <div class="gside">
+      <div class="slbl2">NIVEL</div>
+      <div class="lvln" id="h-level">01</div>
+      <div class="lbar" id="lbar"></div>
+    </div>
+  </div>
+  <div class="gctrl">
+    <div class="crow">
+        <button class="cbtn rotbtn"
+            ontouchstart="event.preventDefault();doRotate();"
+            onclick="doRotate()">↺</button>
+    </div>
+
+    <div class="crow">
+
+        <button class="cbtn"
+            ontouchstart="event.preventDefault();hstart('l');"
+            ontouchend="hstop()"
+            ontouchcancel="hstop()"
+            onmousedown="hstart('l')"
+            onmouseup="hstop()">←</button>
+
+        <button class="cbtn"
+            ontouchstart="event.preventDefault();hstart('d');"
+            ontouchend="hstop()"
+            ontouchcancel="hstop()"
+            onmousedown="hstart('d')"
+            onmouseup="hstop()">↓</button>
+
+        <button class="cbtn"
+            ontouchstart="event.preventDefault();hstart('r');"
+            ontouchend="hstop()"
+            ontouchcancel="hstop()"
+            onmousedown="hstart('r')"
+            onmouseup="hstop()">→</button>
+
+    </div>
+</div>
+</div>
+</div>
+
+<!-- OVERLAY PAUSA -->
+<div id="ov-pause" class="ov hid">
+<div class="ovbox">
+  <div class="ovtitle">⏸ PAUSA</div>
+  <button class="mbtn green-b center" onclick="reanudar()">▶ CONTINUAR</button>
+  <button class="mbtn center" onclick="irMenuJuego()">← MENÚ</button>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     FIN DEL JUEGO
+═══════════════════════════════════════ -->
+<div id="s-go" class="screen">
+<div class="wrap">
+  <div id="title-go" class="ptitle big"></div>
+  <div class="godiv"><span class="gdline"></span><span style="font-size:20px">🏆</span><span class="gdline"></span></div>
+  <div class="resbox">
+    <div class="rrow"><span class="rico">🏆</span><span class="rlbl">PUNTAJE TOTAL</span><span class="rval" id="go-score">000000</span></div>
+    <div class="rrow"><span class="rico">⏱</span><span class="rlbl">TIEMPO JUGADO</span><span class="rval" id="go-time">00:00:00</span></div>
+  </div>
+  <div id="go-rec">
+    <div class="reclbl">✦ ¡NUEVO RÉCORD! ✦</div>
+    <div class="iprompt" style="margin-top:6px">INGRESA TUS INICIALES (3 LETRAS):</div>
+    <div class="islots">
+      <span class="isl" id="i0">_</span><span class="isl" id="i1">_</span><span class="isl" id="i2">_</span>
+    </div>
+    <div class="pkb">
+      <div class="krow" id="kr0"></div>
+      <div class="krow" id="kr1"></div>
+      <div class="krow" id="kr2"></div>
+      <div class="krow" style="gap:7px">
+        <button class="kact kbk" onclick="kBack()">←</button>
+        <button class="kact kdel" onclick="kDel()">BORRAR</button>
+        <button class="kact kok" onclick="kOk()">✓</button>
+      </div>
+    </div>
+  </div>
+  <div id="go-thanks" style="display:none"><div class="thanks" id="go-thanks-txt">¡GRACIAS POR JUGAR!</div></div>
+  <div></div>
+  <div></div>
+  <div class="bottom-ad-gameover">
+
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:320px;height:50px"
+     data-ad-client="ca-pub-1274133643788357"
+     data-ad-slot="7762896363"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+
+</div>
+
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+  <div></div>
+  <div></div>
+  <div></div>
+  <button class="mbtn center w100" onclick="irA('s-menu')">← VOLVER AL MENÚ</button>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     SUBIDA DE NIVEL
+═══════════════════════════════════════ -->
+<div id="s-level" class="screen">
+<div class="wrap luwrap" style="position:relative">
+  <div class="sparks" id="sparks"></div>
+  <div class="lucon">★ ¡FELICITACIONES! ★</div>
+  <div class="lusub">¡HAS SUBIDO DE NIVEL!</div>
+  <div class="lutrans">
+    <span class="lold" id="lu-old">NIVEL 01</span>
+    <span class="larrow">→</span>
+    <span class="lnew" id="lu-new">NIVEL 02</span>
+  </div>
+  <div class="rbanner">·— RECOMPENSA DESBLOQUEADA —·</div>
+  <div class="rsub">¡NUEVA OBRA DE ARTE EN TU GALERÍA!</div>
+  <div class="aframe">
+    <div class="abox" id="lu-abox"><canvas id="lu-canvas" width="160" height="160"></canvas></div>
+  </div>
+  <div class="aibox">
+    <div class="airow"><span class="aiico" style="color:var(--gold)">▣</span><span class="aikey">OBRA:</span><span class="aival" id="lu-title">—</span></div>
+    <div class="airow"><span class="aiico" style="color:var(--green)">●</span><span class="aikey">AUTOR:</span><span class="aival" id="lu-author">—</span></div>
+    <div class="airow"><span class="aiico" style="color:var(--purpleL)">⛪</span><span class="aikey">ESTILO:</span><span class="aival" id="lu-style">—</span></div>
+  </div>
+  <button class="mbtn green-b center w100" onclick="continuarTrasNivel()">¡CONTINUAR!</button>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     GALERÍA
+═══════════════════════════════════════ -->
+<div id="s-gallery" class="screen">
+<div class="wrap">
+  <div id="title-gallery" class="ptitle med"></div>
+  <div style="font-size:26px">🏛</div>
+  <div class="gcnt">OBRAS DESBLOQUEADAS: <span class="green" id="gcnt">00</span>/100</div>
+  <div class="glist" id="glist"></div>
+  <button class="mbtn center w100" onclick="irA('s-menu')">← VOLVER AL MENÚ</button>
+</div>
+</div>
+
+<!-- OVERLAY DETALLE -->
+<div id="ov-art" class="ov hid">
+<div class="ovbox detbox">
+  <div class="aframe"><div class="abox largebox" id="det-abox"><canvas id="det-canvas" width="200" height="200"></canvas></div></div>
+  <div class="aibox">
+    <div class="airow"><span class="aiico" style="color:var(--gold)">▣</span><span class="aikey">OBRA:</span><span class="aival" id="det-title">—</span></div>
+    <div class="airow"><span class="aiico" style="color:var(--green)">●</span><span class="aikey">AUTOR:</span><span class="aival" id="det-author">—</span></div>
+    <div class="airow"><span class="aiico" style="color:var(--purpleL)">⛪</span><span class="aikey">ESTILO:</span><span class="aival" id="det-style">—</span></div>
+  </div>
+  <button class="mbtn center w100" onclick="cerrarDet()">← VOLVER A GALERÍA</button>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     INSTRUCCIONES
+═══════════════════════════════════════ -->
+<div id="s-instr" class="screen">
+<div class="wrap">
+  <div id="title-instr" class="ptitle med"></div>
+  <div class="isec">
+    <div class="isec-title">★ OBJETIVO ★</div>
+    <div class="instr-obj">
+      <div class="instr-obj-text itext">
+        Coloca las piezas que caen desde la parte superior para completar líneas horizontales.<br><br>
+        Cuando completes una línea, <span class="green">desaparece</span> y obtienes puntos.<br><br>
+        El juego termina cuando las piezas llegan hasta la <span class="cyan">parte superior</span>.
+      </div>
+      <div class="instr-miniboard"><canvas id="mini-board" width="90" height="90"></canvas></div>
+    </div>
+  </div>
+  <div class="isec">
+    <div class="isec-title">✦ CONTROLES ✦</div>
+    <div class="cgrid">
+      <div class="citem"><div class="cbdemo">←</div><div class="cdesc">MOVER<br>IZQUIERDA</div></div>
+      <div class="citem"><div class="cbdemo">→</div><div class="cdesc">MOVER<br>DERECHA</div></div>
+      <div class="citem"><div class="cbdemo">↓</div><div class="cdesc">BAJAR<br>RÁPIDO</div></div>
+      <div class="citem"><div class="cbdemo" style="border-color:var(--purple);color:var(--purpleL)">↺</div><div class="cdesc">ROTAR<br>PIEZA</div></div>
+    </div>
+  </div>
+  <div class="isec">
+    <div class="isec-title" style="color:var(--purpleL)">✦ ¿CÓMO FUNCIONA? ✦</div>
+    <div style="display:flex;gap:12px;align-items:flex-start">
+      <div style="flex:1">
+        <div class="howrow"><span class="hdot" style="color:var(--purpleL)">■</span> Por cada línea completada obtienes <span class="green">puntos</span>.</div>
+        <div class="howrow"><span class="hdot" style="color:var(--red)">■</span> Cuantas más líneas completes a la vez, <span class="green">más puntos</span> ganarás.</div>
+        <div class="howrow"><span class="hdot" style="color:var(--cyan)">■</span> Al alcanzar 10 líneas por nivel, <span class="cyan">subirás de nivel</span> y el juego se vuelve más rápido.</div>
+      </div>
+      <div class="hud-demo">
+        <div class="hd-row"><span class="hd-lbl">PUNTUACIÓN</span></div>
+        <div class="hd-row"><span class="hd-val">012345</span></div>
+        <div style="margin-top:4px"><div class="hd-row"><span class="hd-lbl">NIVEL</span></div></div>
+        <div class="hd-row"><span class="hd-val" style="font-size:15px">05</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="isec" style="border-color:var(--gold2)">
+    <div class="isec-title" style="color:var(--gold)">✦ PROGRESO Y RECOMPENSAS ✦</div>
+    <div style="display:flex;gap:10px;align-items:flex-start">
+      <div class="itext" style="flex:1">
+        Acumula puntos para subir de nivel y desbloquear nuevas <span class="cyan">obras de arte</span> en la galería.<br><br>
+        Cada <span class="gold">10 líneas</span> completadas subirás un nivel y desbloquearás una obra nueva.<br><br>
+        <span class="green">¡Tu objetivo es completar toda la galería!</span>
+      </div>
+      <div class="aframe" style="padding:3px;flex-shrink:0">
+        <div style="width:60px;height:60px;background:#0D0F14;display:flex;align-items:center;justify-content:center">
+          <canvas id="instr-art" width="58" height="58" style="image-rendering:pixelated"></canvas>
+        </div>
+      </div>
+    </div>
+    </div>
+  <!-- INFORMACIÓN -->
+<div class="infobox">
+  <div class="infotitle">★ INFORMACIÓN ★</div>
+  <div class="infotxt">
+    <b><span class="cyan">Autor:</span></b> RUNICO
+  </div>
+  <div class="infotxt">
+    <b><span class="red">Versión:</span></b> 1.0
+  </div>
+  <div class="infotxt">
+    <b><span class="purple">Créditos y Propósito Educativo:</span></b><br>
+    Tetris Galería de Arte es un proyecto educativo y cultural diseñado para fomentar el interés por la historia del arte mediante el juego.
+    Las imágenes incluidas en la galería son reinterpretaciones originales en estilo pixel art inspiradas en obras reconocidas de la historia del arte.
+    Cada obra muestra el nombre de su autor, título y movimiento artístico correspondiente con fines informativos, educativos y de divulgación cultural.
+  </div>
+  <div class="infotxt">
+    <b><span class="green">Derechos y Reconocimiento:</span></b><br>
+    Este proyecto no pretende sustituir, reproducir ni distribuir las obras originales.
+    Su objetivo es promover el conocimiento, la apreciación artística y el aprendizaje sobre distintos estilos, movimientos y períodos históricos del arte.
+    Todos los autores y obras mencionados son reconocidos y acreditados con fines educativos.
+  </div>
+  <div class="infotxt">
+    <b><span class="cyan">Contacto:</span></b> runico.art3@gmail.com
+  </div>
+  </div>
+  <button class="mbtn center w100" onclick="irA('s-menu')">← VOLVER AL MENÚ</button>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MEJORES PUNTAJES
+═══════════════════════════════════════ -->
+<div id="s-hs" class="screen">
+<div class="wrap">
+  <div id="title-hs" class="ptitle med"></div>
+  <div style="display:flex;align-items:center;gap:9px;width:100%">
+    <span style="flex:1;height:1px;border-top:1px dashed var(--purple)"></span>
+    <span style="font-size:22px">🏆</span>
+    <span style="flex:1;height:1px;border-top:1px dashed var(--purple)"></span>
+  </div>
+  <div class="hshdr">
+    <span>PUESTO</span><span>NOMBRE</span><span>PUNTAJE</span><span>TIEMPO</span>
+  </div>
+  <div class="hslist" id="hslist"></div>
+  <button class="mbtn center w100" onclick="irA('s-menu')">← VOLVER AL MENÚ</button>
+</div>
+</div>
+<script src="js/game.js"></script>
+</body>
+</html>
