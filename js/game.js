@@ -719,7 +719,6 @@ function pausar(){
   G.paused=true;sfxPause();
   document.getElementById('ov-pause').classList.remove('hid');
   G.saved=true;saveAll();
-  resetControls();
 }
 function reanudar(){
   sfxBtn();G.paused=false;
@@ -732,7 +731,6 @@ function irMenuJuego(){
   cancelAnimationFrame(G._raf);clearInterval(G._timer);
   document.getElementById('ov-pause').classList.add('hid');
   saveAll();irA('s-menu');updateContBtn();
-  resetControls();
 }
 function triggerGO(){
   G.running=false;G.saved=false;
@@ -750,7 +748,6 @@ function triggerGO(){
   document.getElementById('go-thanks-txt').textContent='¡GRACIAS POR JUGAR!';
   if(esR){initBuf=[];renderInits();}
   irA('s-go');
-  resetControls();
 }
 function isRecord(sc){  
   if(G.scores.length<10)return true;
@@ -797,10 +794,6 @@ function continuarTrasNivel(){
   G._lastDrop = performance.now();
   G._raf = requestAnimationFrame(loop);
   saveAll();       // guarda el estado con el nivel actualizado
-}
-function resetControls(){
-  hstop();
-  G._hold = null;
 }
 function sparks(){
   const el=document.getElementById('sparks');if(!el)return;
