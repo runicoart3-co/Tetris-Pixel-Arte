@@ -763,7 +763,7 @@ function showLevelUp(){
   const obraIdx = G.level - 1; // level ya fue incrementado antes de llamar esto
   if(obraIdx >= 0 && obraIdx < G.gallery.length){
     G.gallery[obraIdx].unlocked = true;
-  }
+  
   const art=G.gallery[obraIdx]||G.gallery[0];
   sfxLevelUp();sfxArtwork();vibrate(500,300,500);
 
