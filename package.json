@@ -1,0 +1,21 @@
+{
+  "name": "tetris-pixel-arte",
+  "version": "1.0.0",
+  "description": "Juego de Tetris con galería de obras maestras del arte universal",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "RUNICO",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@capacitor/android": "^8.4.0",
+    "@capacitor/core": "^8.4.0",
+    "@capacitor/haptics": "^8.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.4.0"
+  }
+}
