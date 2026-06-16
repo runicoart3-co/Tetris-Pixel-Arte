@@ -296,6 +296,8 @@ const SHAPES={
   L:{s:[[0,0,1],[1,1,1]],c:'#29B6F6'}
 };
 const SK=Object.keys(SHAPES);
+let lastPieceType = null;
+let repeatCount = 0;
 const LP=[0,100,100,100,100];
 const PUNTOS_POR_NIVEL=1000;
 
@@ -309,7 +311,7 @@ const G={
   musicOn:true,sfxOn:true,vibOn:true,
   musicVol:0.8,sfxVol:0.8,
   saved:false,gallery:[],scores:[],
-  _raf:null,_timer:null,_hold:null,_lastDrop:0,_musicTimer:null
+  _raf:null,_timer:null,_hold:null,_lastDrop:0,_musicTimer:null,selectedArt:null,
 };
 
 /* ─────────────────────────────────────────
@@ -512,8 +514,27 @@ function renderInits(){
    TETRIS LÓGICA
 ──────────────────────────────────────── */
 function mkBoard(){return Array.from({length:ROWS},()=>Array(COLS).fill(0));}
-function randPiece(){const k=SK[Math.floor(Math.random()*SK.length)];return{k,...SHAPES[k],s:SHAPES[k].s.map(r=>[...r])};}
-function rotate(s){return Array.from({length:s[0].length},(_,c)=>Array.from({length:s.length},(_,r)=>s[s.length-1-r][c]));}
+function randPiece(){
+  let k;
+  do{
+    k = SK[Math.floor(Math.random()*SK.length)];
+  }
+  while(
+    repeatCount >= 3 &&
+    k === lastPieceType
+  );
+  if(k === lastPieceType){
+    repeatCount++;
+  }else{
+    lastPieceType = k;
+    repeatCount = 1;
+  }
+  return {
+    k,
+    ...SHAPES[k],
+    s: SHAPES[k].s.map(r => [...r])
+  };
+}function rotate(s){return Array.from({length:s[0].length},(_,c)=>Array.from({length:s.length},(_,r)=>s[s.length-1-r][c]));}
 function hits(sh,x,y,bd){
   for(let r=0;r<sh.length;r++)for(let c=0;c<sh[r].length;c++){
     if(!sh[r][c])continue;
@@ -843,6 +864,7 @@ function renderGallery(){
   });
 }
 function showDetail(art){
+  G.selectedArt = art;
   sfxBtn();
   const cv = document.getElementById('det-canvas');
   if(cv) drawPixelArt(cv, art.id, 200);
@@ -852,6 +874,30 @@ function showDetail(art){
   document.getElementById('ov-art').classList.remove('hid');
 }
 function cerrarDet(){sfxBtn();document.getElementById('ov-art').classList.add('hid');}
+function jugarNivelGaleria(){
+  if(!G.selectedArt) return;
+  const nivel = G.selectedArt.id;
+  cerrarDet();
+  G.board = mkBoard();
+  G.score = 0;
+  G.lines = 0;
+  G.time = 0;
+  G.level = nivel;
+  G.levelPts = 0;
+  G.cur = null;
+  G.nxt = randPiece();
+  G.running = true;
+  G.paused = false;
+  G.saved = false;
+  irA('s-game');
+  spawn();
+  updateHUD();
+  clearInterval(G._timer);
+  G._timer = setInterval(timerTick,1000);
+  cancelAnimationFrame(G._raf);
+  G._lastDrop = performance.now();
+  G._raf = requestAnimationFrame(loop);
+}
 
 /* ─────────────────────────────────────────
    MEJORES PUNTAJES
