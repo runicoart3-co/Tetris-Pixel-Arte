@@ -713,7 +713,7 @@ function updateContBtn(){
   if(b){b.classList.toggle('disabled',!G.saved);}
 }
 function nuevoJuego(){
-  sfxBtn();
+  hstop();sfxBtn();
   localStorage.removeItem('tgsave2');
   G.board=mkBoard();G.score=0;G.level=0;G.lines=0;G.time=0;G.levelPts=0;
   G.nxt=randPiece();G.running=true;G.paused=false;G.saved=false;
@@ -727,6 +727,7 @@ function nuevoJuego(){
   }
 }
 function continuarJuego(){
+  hstop();
   if(!G.saved)return;sfxBtn();
   if(!loadSave())return;
   G.running=true;G.paused=false;
@@ -748,13 +749,13 @@ function reanudar(){
   G._raf=requestAnimationFrame(loop);
 }
 function irMenuJuego(){
-  G.saved=true;G.paused=true;
+  hstop();G.saved=true;G.paused=true;
   cancelAnimationFrame(G._raf);clearInterval(G._timer);
   document.getElementById('ov-pause').classList.add('hid');
   saveAll();irA('s-menu');updateContBtn();
 }
 function triggerGO(){
-  G.running=false;G.saved=false;
+  hstop();G.running=false;G.saved=false;
   cancelAnimationFrame(G._raf);clearInterval(G._timer);
   localStorage.removeItem('tgsave2');
   updateContBtn();
@@ -875,6 +876,7 @@ function showDetail(art){
 }
 function cerrarDet(){sfxBtn();document.getElementById('ov-art').classList.add('hid');}
 function jugarNivelGaleria(){
+  hstop();
   if(!G.selectedArt) return;
   const nivel = G.selectedArt.id;
   cerrarDet();
